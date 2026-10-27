@@ -242,7 +242,11 @@ body::after{
   overflow:hidden;
   margin-top:70px;
 }
-.photo-panel img{width:100%; display:block; object-fit:cover; aspect-ratio:4/5; filter:grayscale(1) contrast(1.35) brightness(0.95);}
+.photo-panel .frame{
+  position:relative; width:100%; aspect-ratio:4/5; overflow:hidden;
+  filter:grayscale(1) contrast(1.35) brightness(0.95);
+}
+.photo-panel img{position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover;}
 .photo-panel .tint{position:absolute; inset:0; background:var(--red); mix-blend-mode:multiply; opacity:0.55;}
 .photo-panel .halftone{position:absolute; inset:0; background-image:radial-gradient(var(--ink) 1px, transparent 1.3px); background-size:6px 6px; opacity:0.35; mix-blend-mode:multiply;}
 .burst-corner{position:absolute; top:-18px; right:-10px; z-index:4;}
@@ -283,9 +287,12 @@ section{padding-block:60px; position:relative; z-index:2;}
   cursor:zoom-in; transition:transform 0.15s ease, box-shadow 0.15s ease;
 }
 .zoom-tile:hover{transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink), 0 0 44px rgba(226,20,42,0.26);}
-.zoom-tile img{
-  width:100%; display:block; object-fit:cover; aspect-ratio:4/5;
+.zoom-tile .frame{
+  position:relative; width:100%; aspect-ratio:4/5; overflow:hidden;
   filter:grayscale(1) contrast(1.3) brightness(1);
+}
+.zoom-tile img{
+  position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover;
   transition:transform 0.5s ease;
 }
 .zoom-tile:hover img{transform:scale(1.08);}
@@ -372,7 +379,9 @@ footer{
     <div class="dots"></div>
     <div class="bubble">Psst. Vos. Si venís disfrazado, entrás primero. <i>(No es broma.)</i></div>
     <div class="photo-panel">
-      <img src="assets/zoho-floor.png" alt="Pista de Zoho bajo el anillo de luces">
+      <div class="frame">
+        <img src="assets/zoho-floor.png" alt="Pista de Zoho bajo el anillo de luces">
+      </div>
       <div class="tint"></div>
       <div class="halftone"></div>
     </div>
@@ -424,12 +433,16 @@ footer{
     <h2 class="section-title comic">Visualizar</h2>
     <div class="zoom-grid">
       <div class="zoom-tile" data-full="assets/zoho-floor.png">
-        <img src="assets/zoho-floor.png" alt="Pista bajo el anillo de luces rojas">
+        <div class="frame">
+          <img src="assets/zoho-floor.png" alt="Pista bajo el anillo de luces rojas">
+        </div>
         <div class="tint"></div>
         <span class="cap">el anillo, encendido</span>
       </div>
       <div class="zoom-tile" data-full="assets/zoho-poster.png">
-        <img src="assets/zoho-poster.png" alt="Afiche Zohoween Town">
+        <div class="frame">
+          <img src="assets/zoho-poster.png" alt="Afiche Zohoween Town">
+        </div>
         <div class="tint"></div>
         <span class="cap">zohoween town</span>
       </div>

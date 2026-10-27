@@ -55,14 +55,17 @@ body::before{
   align-items:flex-end;
   overflow:hidden;
 }
+.hero-photo-frame{
+  position:absolute; inset:0;
+  overflow:hidden;
+  filter:saturate(1.2) contrast(1.08);
+}
 .hero-photo{
   position:absolute; inset:0;
   width:100%; height:100%;
   object-fit:cover;
   object-position:50% 32%;
-  filter:saturate(1.2) contrast(1.08);
 }
-.hero-photo::after{content:'';}
 .hero-scrim{
   position:absolute; inset:0;
   background:
@@ -307,7 +310,9 @@ footer{
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
 
 <div class="hero">
-  <img class="hero-photo" src="assets/zoho-floor.png" alt="Pista de Zoho bajo el anillo de luces rojas">
+  <div class="hero-photo-frame">
+    <img class="hero-photo" src="assets/zoho-floor.png" alt="Pista de Zoho bajo el anillo de luces rojas">
+  </div>
   <div class="hero-scrim"></div>
   <div class="hero-inner">
     <span class="stamp">Zona 9 · Guatemala</span>
