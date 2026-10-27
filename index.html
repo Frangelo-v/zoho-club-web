@@ -1,0 +1,513 @@
+<title>Zoho Club</title>
+<style>
+:root{
+  --bg:#130b0a;
+  --cork:#1c1210;
+  --card:#241714;
+  --paper:#ece2d0;
+  --paper-dim:#d9cab0;
+  --ink:#241714;
+  --line:#3a2622;
+  --text:#f2e9df;
+  --text-dim:#b4a399;
+  --red:#d81e2c;
+  --red-deep:#7e1017;
+  color-scheme: dark;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Archivo',system-ui,-apple-system,sans-serif;
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+  overflow-x:hidden;
+}
+h1,h2,h3{margin:0; text-wrap:balance;}
+.poster{font-family:'Bungee',system-ui,sans-serif; text-transform:uppercase; letter-spacing:0.01em;}
+.hand{font-family:'Permanent Marker',cursive;}
+.type{font-family:'Space Mono',monospace;}
+a{color:inherit;}
+img{max-width:100%; display:block;}
+.wrap{max-width:1000px; margin:0 auto; padding-inline:4px;}
+.label{
+  font-family:'Space Mono',monospace;
+  font-size:11.5px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--red);
+}
+
+/* paper grain, everywhere */
+body::before{
+  content:'';
+  position:fixed; inset:0; z-index:60; pointer-events:none;
+  opacity:0.045; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;
+  min-height:620px;
+  display:flex;
+  align-items:flex-end;
+  overflow:hidden;
+}
+.hero-photo{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  object-position:50% 32%;
+  filter:saturate(1.2) contrast(1.08);
+}
+.hero-photo::after{content:'';}
+.hero-scrim{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(70% 55% at 50% 100%, rgba(19,11,10,0.55), transparent),
+    linear-gradient(0deg, var(--bg) 0%, rgba(19,11,10,0.35) 30%, rgba(19,11,10,0.1) 55%, rgba(19,11,10,0.55) 100%);
+}
+.hero-inner{
+  position:relative; z-index:2;
+  width:100%; max-width:1000px; margin:0 auto;
+  padding:0 4px 50px;
+  display:flex; flex-direction:column; gap:16px;
+}
+.stamp{
+  display:inline-flex; align-items:center; gap:8px;
+  align-self:flex-start;
+  border:2px solid var(--red);
+  color:var(--red);
+  background:rgba(19,11,10,0.55);
+  padding:6px 14px;
+  font-family:'Space Mono',monospace;
+  font-size:11.5px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  transform:rotate(-2deg);
+}
+.hero-title{
+  font-size:clamp(54px, 13vw, 128px);
+  line-height:0.86;
+  color:var(--paper);
+  text-shadow:3px 3px 0 var(--red-deep);
+}
+.hero-title em{
+  font-style:normal;
+  color:var(--red);
+  text-shadow:3px 3px 0 #2a0507;
+}
+.hero-sub{
+  font-family:'Space Mono',monospace;
+  font-size:14.5px;
+  color:var(--text-dim);
+  max-width:46ch;
+  line-height:1.6;
+}
+.hero-ctas{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:13px 22px;
+  font-family:'Space Mono',monospace;
+  font-size:12.5px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  text-decoration:none;
+  border:2px solid var(--paper);
+  color:var(--paper);
+  transition:transform 0.15s ease;
+}
+.btn:hover{transform:translateY(-2px) rotate(-1deg);}
+.btn-solid{background:var(--red); border-color:var(--red); color:#1d0306;}
+.btn-outline{background:transparent;}
+
+/* torn paper divider */
+.torn{
+  height:20px;
+  background:var(--cork);
+  clip-path:polygon(0% 100%,3% 0%,7% 100%,11% 0%,15% 100%,19% 0%,23% 100%,27% 0%,31% 100%,35% 0%,39% 100%,43% 0%,47% 100%,51% 0%,55% 100%,59% 0%,63% 100%,67% 0%,71% 100%,75% 0%,79% 100%,83% 0%,87% 100%,91% 0%,95% 100%,99% 0%,100% 100%,0 100%);
+}
+
+/* ---------- CORKBOARD BODY ---------- */
+.board{
+  background:
+    radial-gradient(circle at 12% 18%, rgba(0,0,0,0.25) 0, transparent 2px),
+    radial-gradient(circle at 68% 42%, rgba(0,0,0,0.2) 0, transparent 2px),
+    radial-gradient(circle at 35% 74%, rgba(0,0,0,0.22) 0, transparent 2px),
+    radial-gradient(circle at 88% 85%, rgba(0,0,0,0.2) 0, transparent 2px),
+    var(--cork);
+  background-size:140px 140px,160px 160px,150px 150px,170px 170px,auto;
+}
+section{padding-block:60px;}
+.section-head{margin-bottom:36px; display:flex; flex-direction:column; gap:8px;}
+.section-title{font-family:'Bungee',sans-serif; text-transform:uppercase; font-size:clamp(28px,5.5vw,46px); color:var(--paper);}
+
+/* ---------- PINNED NOTES (about) ---------- */
+.pin-grid{
+  display:flex; flex-wrap:wrap; gap:26px 22px;
+}
+.note{
+  background:var(--card);
+  border:1px solid var(--line);
+  padding:22px 20px 20px;
+  width:min(100%, 250px);
+  flex:1 1 230px;
+  position:relative;
+  box-shadow:0 10px 24px rgba(0,0,0,0.35);
+}
+.note:nth-child(1){transform:rotate(-2deg);}
+.note:nth-child(2){transform:rotate(1.4deg);}
+.note:nth-child(3){transform:rotate(-1deg);}
+.note:nth-child(4){transform:rotate(2deg);}
+.note::before{
+  content:'';
+  position:absolute; top:-9px; left:50%; transform:translateX(-50%);
+  width:16px; height:16px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #ff6b6b, var(--red-deep));
+  box-shadow:0 3px 4px rgba(0,0,0,0.5);
+}
+.note .label{display:block; margin-bottom:8px;}
+.note h3{font-family:'Archivo'; font-weight:700; font-size:18px; color:var(--paper); margin-bottom:8px;}
+.note p{margin:0; font-size:14px; line-height:1.55; color:var(--text-dim);}
+
+/* ---------- GALLERY: polaroids ---------- */
+.polaroid-row{
+  display:flex; flex-wrap:wrap; gap:34px;
+  justify-content:flex-start;
+  padding-block:10px 20px;
+}
+.polaroid{
+  background:var(--paper);
+  padding:14px 14px 46px;
+  width:min(100%, 280px);
+  box-shadow:0 14px 30px rgba(0,0,0,0.45);
+  position:relative;
+}
+.polaroid:nth-child(1){transform:rotate(-3deg);}
+.polaroid:nth-child(2){transform:rotate(2.5deg);}
+.polaroid img{width:100%; filter:saturate(1.1) contrast(1.05);}
+.polaroid .tape{
+  position:absolute; top:-12px; left:50%; transform:translateX(-50%) rotate(-3deg);
+  width:90px; height:26px;
+  background:rgba(236,226,208,0.55);
+  box-shadow:0 2px 4px rgba(0,0,0,0.25);
+}
+.polaroid figcaption{
+  position:absolute; left:16px; right:16px; bottom:12px;
+  font-family:'Permanent Marker',cursive;
+  font-size:16px;
+  color:var(--ink);
+  line-height:1.2;
+}
+
+/* ---------- MENU: receipts ---------- */
+.receipt-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:34px;
+}
+.receipt{
+  background:var(--paper);
+  color:var(--ink);
+  padding:26px 22px 22px;
+  box-shadow:0 12px 26px rgba(0,0,0,0.4);
+  clip-path:polygon(0% 10px,2% 0%,5% 10px,8% 0%,11% 10px,14% 0%,17% 10px,20% 0%,23% 10px,26% 0%,29% 10px,32% 0%,35% 10px,38% 0%,41% 10px,44% 0%,47% 10px,50% 0%,53% 10px,56% 0%,59% 10px,62% 0%,65% 10px,68% 0%,71% 10px,74% 0%,77% 10px,80% 0%,83% 10px,86% 0%,89% 10px,92% 0%,95% 10px,98% 0%,100% 10px,100% 100%,0 100%);
+}
+.receipt:nth-child(odd){transform:rotate(-0.8deg);}
+.receipt:nth-child(even){transform:rotate(0.8deg);}
+.receipt h4{font-family:'Bungee'; font-size:17px; text-transform:uppercase; color:var(--red-deep); margin:6px 0 2px;}
+.receipt .sub{font-family:'Space Mono'; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:#7a6a58;}
+.receipt-list{list-style:none; margin:14px 0 0; padding:0; font-family:'Space Mono'; font-size:13.5px;}
+.receipt-list li{
+  display:flex; justify-content:space-between; gap:10px;
+  padding-block:6px;
+  border-bottom:1px dashed #b9a98d;
+}
+.receipt-list li:last-child{border-bottom:none;}
+.receipt-list .price{font-variant-numeric:tabular-nums; font-weight:700;}
+.receipt-list .unsure{color:var(--red-deep);}
+.receipt-note{margin-top:16px; font-family:'Space Mono'; font-size:11px; color:#8a7a68;}
+.receipt-note b{color:var(--red-deep);}
+
+/* ---------- CONTACT: tickets ---------- */
+.ticket-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:22px;
+}
+.ticket{
+  display:flex;
+  background:var(--paper);
+  color:var(--ink);
+  box-shadow:0 12px 24px rgba(0,0,0,0.4);
+}
+.ticket-main{flex:1; padding:20px;}
+.ticket-main .label{color:var(--red-deep);}
+.ticket-main .value{font-family:'Bungee'; font-size:16px; margin-top:8px; word-break:break-word;}
+.ticket-stub{
+  width:62px;
+  background:var(--red-deep);
+  color:var(--paper);
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+  background-image:radial-gradient(circle, var(--cork) 3.5px, transparent 4px);
+  background-size:100% 20px;
+  background-position:-1px 6px;
+}
+.ticket-stub span{
+  writing-mode:vertical-rl;
+  font-family:'Space Mono'; font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+}
+.ticket a.btn{margin-top:12px; border-color:var(--ink); color:var(--ink);}
+.ticket a.btn:hover{background:var(--red-deep); border-color:var(--red-deep); color:var(--paper);}
+
+footer{
+  padding-block:36px 120px;
+  border-top:1px solid var(--line);
+  color:var(--text-dim);
+  font-family:'Space Mono';
+  font-size:12px;
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+}
+
+/* ---------- WRISTBAND DOCK ---------- */
+.dock{
+  position:fixed; left:0; right:0; bottom:0; z-index:30;
+  background:var(--red-deep);
+  display:flex; flex-direction:column;
+  padding:0 max(16px, env(safe-area-inset-left,0px)) env(safe-area-inset-bottom,0px) max(16px, env(safe-area-inset-right,0px));
+}
+.dock-perf{
+  height:10px;
+  background-image:radial-gradient(circle, var(--bg) 3px, transparent 3.2px);
+  background-size:24px 100%;
+  background-position:12px 5px;
+}
+.dock-row{display:flex;}
+.dock a{
+  flex:1; text-align:center;
+  padding:13px 6px 14px;
+  font-family:'Space Mono'; font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+  text-decoration:none;
+  color:var(--paper);
+  border-left:1px dashed rgba(236,226,208,0.35);
+}
+.dock a:first-child{border-left:none;}
+.dock a.primary{background:#1d0306; color:#ffb8b8; font-weight:700;}
+
+@media (max-width:560px){
+  .hero{min-height:560px;}
+  .note:nth-child(n){transform:rotate(0deg);}
+  .polaroid:nth-child(n){transform:rotate(0deg);}
+  .receipt:nth-child(n){transform:rotate(0deg);}
+}
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+<div class="hero">
+  <img class="hero-photo" src="assets/zoho-floor.png" alt="Pista de Zoho bajo el anillo de luces rojas">
+  <div class="hero-scrim"></div>
+  <div class="hero-inner">
+    <span class="stamp">Zona 9 · Guatemala</span>
+    <h1 class="hero-title poster">AQUÍ<br>ES <em>ZOHO</em></h1>
+    <p class="hero-sub">El anillo de luces rojas no se apaga hasta que cierra la barra. Viernes y sábado, Zona 9 se mueve acá.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-solid" href="https://wa.link/j1p7nb" target="_blank" rel="noopener">Reservar mesa</a>
+      <a class="btn btn-outline" href="https://waze.com/ul/h9fxeh1evy" target="_blank" rel="noopener">Cómo llegar</a>
+      <a class="btn btn-outline" href="https://www.instagram.com/zoho.guatemalacity" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</div>
+<div class="torn"></div>
+
+<div class="board">
+  <div class="wrap">
+    <section id="about">
+      <div class="section-head">
+        <span class="label">De qué va esto</span>
+        <h2 class="section-title poster">Lo que te espera</h2>
+      </div>
+      <div class="pin-grid">
+        <div class="note">
+          <span class="label">01</span>
+          <h3>El anillo</h3>
+          <p>La instalación de luces que cuelga sobre la pista es lo primero que ve todo el mundo al entrar — y lo último que recuerda al salir.</p>
+        </div>
+        <div class="note">
+          <span class="label">02</span>
+          <h3>DJ en vivo</h3>
+          <p>Sets en vivo todo el fin de semana, mezclando lo latino con lo que suena afuera ahora mismo.</p>
+        </div>
+        <div class="note">
+          <span class="label">03</span>
+          <h3>Mesa propia</h3>
+          <p>Servicio de botella, tu espacio reservado y la mejor vista del anillo de luces desde arriba.</p>
+        </div>
+        <div class="note">
+          <span class="label">04</span>
+          <h3>Zona 9</h3>
+          <p>Cerca de todo, fácil de llegar — y la fila se mueve rápido si ya reservaste.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="ambiente">
+      <div class="section-head">
+        <span class="label">Cómo se ve</span>
+        <h2 class="section-title poster">La última noche</h2>
+      </div>
+      <div class="polaroid-row">
+        <figure class="polaroid">
+          <div class="tape"></div>
+          <img src="assets/zoho-floor.png" alt="Pista llena bajo el anillo de luces rojas en Zoho">
+          <figcaption>el anillo, encendido</figcaption>
+        </figure>
+        <figure class="polaroid">
+          <div class="tape"></div>
+          <img src="assets/zoho-poster.png" alt="Afiche del evento Zohoween Town en Zoho">
+          <figcaption>Zohoween Town</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="section-head">
+        <span class="label">La cuenta</span>
+        <h2 class="section-title poster">Botellas y barra</h2>
+      </div>
+      <p style="font-family:'Space Mono'; font-size:13px; color:var(--text-dim); max-width:50ch; margin:-18px 0 30px;">Precios en quetzales. Lista completa y promos de la noche, confirmadas directo por WhatsApp.</p>
+
+      <div class="receipt-grid">
+        <div class="receipt">
+          <span class="sub">Botella · Q880 c/u</span>
+          <h4>Premium</h4>
+          <ul class="receipt-list">
+            <li><span>Buchanan's 12</span></li>
+            <li><span>Johnnie Walker Black Label</span></li>
+            <li><span>Old Parr</span></li>
+            <li><span>Grey Goose</span></li>
+            <li><span>Ron Zacapa Centenario</span></li>
+            <li><span>Tequila 1800</span></li>
+            <li><span>Jägermeister</span></li>
+          </ul>
+        </div>
+
+        <div class="receipt">
+          <span class="sub">Champagne · Whisky · Tequila</span>
+          <h4>VIP</h4>
+          <ul class="receipt-list">
+            <li><span>Moët Ice</span><span class="price">Q1,100</span></li>
+            <li><span>Moët &amp; Chandon</span><span class="price">Q4,400</span></li>
+            <li><span>Dom Pérignon</span><span class="price">Q4,000</span></li>
+            <li><span>Johnnie Walker Black Label</span><span class="price">Q1,100</span></li>
+            <li><span>Buchanan's 18</span><span class="price">Q1,660</span></li>
+            <li><span>Don Julio 70</span><span class="price">Q1,660</span></li>
+            <li><span>Don Julio Blanco</span><span class="price">Q990</span></li>
+            <li><span>Patrón Añejo</span><span class="price">Q1,200</span></li>
+            <li><span>Patrón Reposado</span><span class="price">Q1,200</span></li>
+            <li><span>1800 Cristalino</span><span class="price">Q1,660</span></li>
+          </ul>
+        </div>
+
+        <div class="receipt">
+          <span class="sub">Ron y licores</span>
+          <h4>Standard</h4>
+          <ul class="receipt-list">
+            <li><span>XL Clásico</span><span class="price">Q440</span></li>
+            <li><span>XL Color</span><span class="price">Q440</span></li>
+            <li><span>XL Sour</span><span class="price">Q440</span></li>
+            <li><span class="unsure">12 Botran</span><span class="price unsure">Q550</span></li>
+            <li><span class="unsure">José Cuervo</span><span class="price unsure">Q550</span></li>
+            <li><span class="unsure">Absolut</span><span class="price unsure">Q550</span></li>
+            <li><span class="unsure">Johnnie Walker Red Label</span><span class="price unsure">Q550</span></li>
+            <li><span class="unsure">Aguardiente Antioqueño</span><span class="price unsure">Q550</span></li>
+          </ul>
+        </div>
+
+        <div class="receipt">
+          <span class="sub">Recién llegadas</span>
+          <h4>Novedades</h4>
+          <ul class="receipt-list">
+            <li><span class="unsure">Gran Malo</span><span class="price unsure">Q880</span></li>
+            <li><span class="unsure">Monkey Shoulder</span><span class="price unsure">Q1,660</span></li>
+            <li><span class="unsure">Old Parr 18</span><span class="price unsure">Q880</span></li>
+            <li><span class="unsure">Chivas Regal 12</span><span class="price unsure">Q1,660</span></li>
+            <li><span class="unsure">Chivas Regal 18</span><span class="price unsure">Q550</span></li>
+          </ul>
+        </div>
+
+        <div class="receipt">
+          <span class="sub">Barra</span>
+          <h4>Cerveza &amp; sin alcohol</h4>
+          <ul class="receipt-list">
+            <li><span>Monte Carlo</span><span class="price">Q40</span></li>
+            <li><span>Corona</span><span class="price">Q40</span></li>
+            <li><span>Gallo</span><span class="price">Q40</span></li>
+            <li><span>Beerbox (12 cervezas)</span><span class="price">Q440</span></li>
+            <li><span>Red Bull</span><span class="price">Q45</span></li>
+            <li><span>Soda</span><span class="price">Q25</span></li>
+            <li><span>Agua</span><span class="price">Q25</span></li>
+          </ul>
+        </div>
+      </div>
+      <p class="receipt-note" style="color:var(--text-dim); margin-top:24px;"><b>*</b> Los precios en rojo (Standard y Novedades) están pendientes de confirmar con el local.</p>
+    </section>
+
+    <section id="contacto">
+      <div class="section-head">
+        <span class="label">Entrada</span>
+        <h2 class="section-title poster">Reservá tu lugar</h2>
+      </div>
+      <div class="ticket-grid">
+        <div class="ticket">
+          <div class="ticket-main">
+            <span class="label">WhatsApp</span>
+            <div class="value">wa.link/j1p7nb</div>
+            <a class="btn" href="https://wa.link/j1p7nb" target="_blank" rel="noopener">Escribir ahora</a>
+          </div>
+          <div class="ticket-stub"><span>RESERVA</span></div>
+        </div>
+        <div class="ticket">
+          <div class="ticket-main">
+            <span class="label">Ubicación</span>
+            <div class="value">Zona 9, Guatemala</div>
+            <a class="btn" href="https://waze.com/ul/h9fxeh1evy" target="_blank" rel="noopener">Abrir en Waze</a>
+          </div>
+          <div class="ticket-stub"><span>MAPA</span></div>
+        </div>
+        <div class="ticket">
+          <div class="ticket-main">
+            <span class="label">Instagram</span>
+            <div class="value">@zoho.guatemalacity</div>
+            <a class="btn" href="https://www.instagram.com/zoho.guatemalacity" target="_blank" rel="noopener">Seguir</a>
+          </div>
+          <div class="ticket-stub"><span>IG</span></div>
+        </div>
+        <div class="ticket">
+          <div class="ticket-main">
+            <span class="label">TikTok</span>
+            <div class="value">@zoho.guatemalacity</div>
+            <a class="btn" href="https://www.tiktok.com/@zoho.guatemalacity" target="_blank" rel="noopener">Seguir</a>
+          </div>
+          <div class="ticket-stub"><span>TT</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <span>ZOHO · ZONA 9, GUATEMALA</span>
+    <span>VIERNES &amp; SÁBADO</span>
+  </footer>
+</div>
+
+<div class="dock">
+  <div class="dock-perf"></div>
+  <div class="dock-row">
+    <a class="primary" href="https://wa.link/j1p7nb" target="_blank" rel="noopener">Reservar</a>
+    <a href="https://waze.com/ul/h9fxeh1evy" target="_blank" rel="noopener">Ubicación</a>
+    <a href="https://www.instagram.com/zoho.guatemalacity" target="_blank" rel="noopener">Instagram</a>
+  </div>
+</div>

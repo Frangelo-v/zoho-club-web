@@ -1,0 +1,580 @@
+<title>Zohoween Town</title>
+<style>
+:root{
+  --bg:#0c0807;
+  --paper:#f0e6d2;
+  --paper-2:#e8dcc2;
+  --ink:#140b0a;
+  --red:#e2142a;
+  --red-dark:#9c0e1e;
+  --yellow:#ffcf3f;
+  --white:#fbf6ea;
+  color-scheme: dark;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:'Archivo',system-ui,-apple-system,sans-serif;
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+  overflow-x:hidden;
+  position:relative;
+}
+h1,h2{margin:0; text-wrap:balance;}
+.comic{font-family:'Bangers',system-ui,sans-serif; letter-spacing:0.02em; line-height:0.95;}
+.mono{font-family:'Space Mono',monospace;}
+a{color:inherit;}
+img{max-width:100%; display:block;}
+.wrap{max-width:1040px; margin:0 auto;}
+button{font:inherit;}
+
+/* film grain + vignette, over everything */
+body::after{
+  content:''; position:fixed; inset:0; z-index:90; pointer-events:none;
+  opacity:0.05; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+.vignette{
+  position:fixed; inset:0; z-index:89; pointer-events:none;
+  background:radial-gradient(110% 85% at 50% 38%, transparent 42%, rgba(4,2,2,0.8) 100%);
+}
+
+/* slow drifting fog, behind the panels */
+#fog{position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden;}
+.cloud{
+  position:absolute;
+  width:55vw; height:55vw; max-width:620px; max-height:620px;
+  border-radius:50%;
+  filter:blur(80px);
+  opacity:0.22;
+  background:radial-gradient(circle, var(--red), transparent 70%);
+  animation:driftfog 36s ease-in-out infinite alternate;
+}
+.cloud.c1{top:-15%; left:-12%;}
+.cloud.c2{
+  top:45%; right:-10%;
+  background:radial-gradient(circle, #3a0a0a, transparent 70%);
+  animation-duration:44s;
+  opacity:0.26;
+}
+.cloud.c3{
+  bottom:-20%; left:30%;
+  width:45vw; height:45vw;
+  background:radial-gradient(circle, var(--red-dark), transparent 70%);
+  animation-duration:30s;
+  opacity:0.16;
+}
+@keyframes driftfog{from{transform:translate(0,0);} to{transform:translate(6vw,5vw);}}
+@media (prefers-reduced-motion:reduce){ .cloud{animation:none;} }
+
+/* halftone paper texture */
+.dots{
+  background-image:radial-gradient(var(--ink) 1px, transparent 1.3px);
+  background-size:11px 11px;
+  background-position:-2px -2px;
+  opacity:0.08;
+  position:absolute; inset:0; pointer-events:none;
+}
+
+.tag{
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--yellow);
+  border:3px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);
+  padding:7px 14px;
+  font-family:'Space Mono'; font-weight:700; font-size:11.5px;
+  letter-spacing:0.1em; text-transform:uppercase;
+}
+
+/* starburst badge */
+.burst{
+  position:relative;
+  width:110px; height:110px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.burst svg{position:absolute; inset:0; width:100%; height:100%;}
+.burst span{
+  position:relative; z-index:1;
+  font-family:'Bangers'; color:var(--white);
+  font-size:15px; line-height:1; text-align:center; transform:rotate(-8deg);
+}
+
+/* hanging bats, swinging from a thread along the edges */
+#bats{position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden;}
+.hang{
+  position:absolute; top:0;
+  transform-origin:top center;
+  animation:swing var(--d) ease-in-out var(--delay) infinite alternate;
+  display:flex; flex-direction:column; align-items:center;
+}
+.hang .thread{width:1px; height:var(--len); background:linear-gradient(to bottom, rgba(230,218,196,0.45), rgba(230,218,196,0.08));}
+.hang .bat-ic{width:var(--s); height:calc(var(--s) * 0.5); filter:drop-shadow(0 3px 4px rgba(0,0,0,0.6));}
+@keyframes swing{0%{transform:rotate(-8deg);} 100%{transform:rotate(8deg);}}
+@media (prefers-reduced-motion:reduce){ .hang{animation:none; transform:rotate(-3deg);} }
+
+/* comic sound fx */
+.fx{
+  font-family:'Bangers'; color:var(--yellow);
+  -webkit-text-stroke:2px var(--ink);
+  text-stroke:2px var(--ink);
+  font-size:clamp(22px,4vw,34px);
+  position:absolute;
+  filter:drop-shadow(2px 2px 0 var(--ink));
+}
+
+/* ---------- TOPBAR ---------- */
+.topbar{
+  position:sticky; top:0; z-index:40;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 4px;
+  background:var(--bg);
+  border-bottom:3px solid var(--red);
+}
+.topbar .word{font-family:'Bangers'; font-size:26px; letter-spacing:0.02em; color:var(--white);}
+.topbar .word span{color:var(--red);}
+
+/* ---------- BUTTONS ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:8px; justify-content:center;
+  padding:13px 22px;
+  font-family:'Bangers'; font-size:16px; letter-spacing:0.03em;
+  text-decoration:none; color:var(--ink);
+  background:var(--white);
+  border:3px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);
+  transition:transform 0.1s ease, box-shadow 0.1s ease;
+  cursor:pointer;
+}
+.btn:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink);}
+.btn:active{transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink);}
+.btn-solid{background:var(--red); color:var(--white);}
+
+/* ---------- HERO SPLIT ---------- */
+.hero{
+  position:relative; z-index:2;
+  display:grid; grid-template-columns:1.1fr 1fr;
+  min-height:640px;
+  border-bottom:3px solid var(--red);
+  box-shadow:0 0 90px rgba(226,20,42,0.22);
+}
+.hero-left{
+  position:relative;
+  background:var(--paper);
+  color:var(--ink);
+  padding:48px 4vw 48px max(24px, 4vw);
+  display:flex; flex-direction:column; gap:18px;
+  overflow:hidden;
+}
+.hero-title{font-size:clamp(40px,6.4vw,74px); position:relative; z-index:1;}
+.hero-title .red{color:var(--red); -webkit-text-stroke:1.5px var(--ink);}
+.hero-quote{
+  font-family:'Archivo'; font-style:italic; font-weight:500; font-size:15px;
+  color:#4a3b2e; max-width:40ch; position:relative; z-index:1;
+}
+
+.rform{
+  position:relative; z-index:1;
+  background:var(--white);
+  border:3px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink), 0 0 46px rgba(226,20,42,0.2);
+  padding:22px;
+  display:flex; flex-direction:column; gap:14px;
+  margin-top:6px;
+}
+.field{display:flex; flex-direction:column; gap:6px;}
+.field label{
+  font-family:'Space Mono'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+  display:flex; align-items:center; gap:6px;
+}
+.field label::before{content:'●'; color:var(--red); font-size:8px;}
+.field input, .field textarea{
+  border:2.5px solid var(--ink);
+  background:var(--paper);
+  padding:11px 12px;
+  font-family:'Archivo'; font-size:14.5px; color:var(--ink);
+}
+.field input:focus, .field textarea:focus{outline:3px solid var(--yellow); outline-offset:0;}
+.check{display:flex; align-items:center; gap:10px; font-family:'Archivo'; font-size:14px; font-weight:600;}
+.check input{width:20px; height:20px; accent-color:var(--red);}
+.rform small{font-family:'Space Mono'; font-size:11px; color:#6b5c4c;}
+#waMsg{
+  display:none;
+  background:var(--yellow); border:2.5px solid var(--ink); padding:12px;
+  font-family:'Space Mono'; font-size:12px; line-height:1.5; white-space:pre-wrap;
+}
+#waMsg.show{display:block;}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+
+/* ---------- HERO RIGHT (red panel) ---------- */
+.hero-right{
+  position:relative;
+  background:var(--red);
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  padding:40px;
+  min-height:340px;
+}
+.hero-right .dots{opacity:0.14; background-image:radial-gradient(var(--ink) 1.2px, transparent 1.5px);}
+.bubble{
+  position:absolute; top:28px; left:28px; right:28px;
+  background:var(--white);
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink);
+  padding:16px 18px;
+  font-family:'Archivo'; font-weight:600; font-size:14px; line-height:1.4;
+  z-index:3;
+}
+.bubble::after{
+  content:''; position:absolute; left:34px; bottom:-14px;
+  width:0; height:0;
+  border:14px solid transparent; border-top-color:var(--white);
+  filter:drop-shadow(0 3px 0 var(--ink));
+}
+.photo-panel{
+  position:relative; z-index:2;
+  width:78%; max-width:340px;
+  border:4px solid var(--ink);
+  box-shadow:7px 7px 0 var(--ink), 0 0 60px rgba(226,20,42,0.35);
+  transform:rotate(-2deg);
+  overflow:hidden;
+  margin-top:70px;
+}
+.photo-panel img{width:100%; height:100%; object-fit:cover; aspect-ratio:4/5; filter:grayscale(1) contrast(1.35) brightness(0.95);}
+.photo-panel .tint{position:absolute; inset:0; background:var(--red); mix-blend-mode:multiply; opacity:0.55;}
+.photo-panel .halftone{position:absolute; inset:0; background-image:radial-gradient(var(--ink) 1px, transparent 1.3px); background-size:6px 6px; opacity:0.35; mix-blend-mode:multiply;}
+.burst-corner{position:absolute; top:-18px; right:-10px; z-index:4;}
+.fx1{top:14px; right:10px; transform:rotate(10deg);}
+.fx2{bottom:30px; left:-6px; transform:rotate(-8deg);}
+
+/* ---------- SECTIONS ---------- */
+section{padding-block:60px; position:relative; z-index:2;}
+.section-eyebrow{
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:'Space Mono'; font-size:11.5px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase;
+  background:var(--ink); color:var(--white); padding:5px 12px;
+}
+.section-title{font-family:'Bangers'; font-size:clamp(34px,6vw,56px); margin-top:10px;}
+
+.panel{
+  background:var(--white);
+  color:var(--ink);
+  border:3px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink), 0 0 40px rgba(226,20,42,0.16);
+  padding:26px 24px;
+  position:relative;
+}
+
+.menu-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:24px; margin-top:22px;}
+.menu-grid h4{font-family:'Bangers'; font-size:22px; color:var(--red); margin:0 0 8px; -webkit-text-stroke:0.6px var(--ink);}
+.menu-grid ul{list-style:none; margin:0; padding:0; font-family:'Space Mono'; font-size:13px;}
+.menu-grid li{display:flex; justify-content:space-between; padding-block:6px; border-bottom:2px dotted #c9bda0; gap:10px;}
+.menu-grid li:last-child{border-bottom:none;}
+.menu-grid .price{font-weight:700; font-variant-numeric:tabular-nums;}
+.menu-more{margin-top:18px; font-family:'Space Mono'; font-size:12px; color:#6b5c4c;}
+.menu-more a{color:var(--red); font-weight:700;}
+
+.zoom-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:22px; margin-top:22px;}
+.zoom-tile{
+  position:relative; overflow:hidden; border:3px solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink), 0 0 34px rgba(226,20,42,0.14);
+  cursor:zoom-in; transition:transform 0.15s ease, box-shadow 0.15s ease;
+}
+.zoom-tile:hover{transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink), 0 0 44px rgba(226,20,42,0.26);}
+.zoom-tile img{
+  width:100%; height:100%; object-fit:cover; aspect-ratio:4/5;
+  filter:grayscale(1) contrast(1.3) brightness(1);
+  transition:transform 0.5s ease;
+}
+.zoom-tile:hover img{transform:scale(1.08);}
+.zoom-tile .tint{position:absolute; inset:0; background:var(--red); mix-blend-mode:multiply; opacity:0.4;}
+.zoom-tile .cap{
+  position:absolute; left:0; right:0; bottom:0; padding:12px 14px;
+  font-family:'Bangers'; font-size:16px; color:var(--white);
+  background:linear-gradient(0deg, rgba(0,0,0,0.75), transparent); z-index:2;
+}
+.lightbox{position:fixed; inset:0; z-index:80; background:rgba(10,5,5,0.92); display:none; align-items:center; justify-content:center; padding:24px; cursor:zoom-out;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:100%; max-height:85vh; border:4px solid var(--white); filter:grayscale(1) contrast(1.2);}
+
+.contact-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; margin-top:22px;}
+.contact-grid .panel{text-align:left;}
+.contact-grid .value{font-family:'Bangers'; font-size:19px; margin:8px 0 14px;}
+
+footer{
+  padding-block:30px 44px; border-top:3px solid var(--red);
+  color:#8a7a6a; font-family:'Space Mono'; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  position:relative; z-index:2;
+}
+
+@media (max-width:800px){
+  .hero{grid-template-columns:1fr;}
+  .hero-right{min-height:420px;}
+  .photo-panel{margin-top:60px;}
+  .row2{grid-template-columns:1fr;}
+}
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<div class="vignette"></div>
+<div id="fog"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div></div>
+<div id="bats"></div>
+
+<nav class="topbar">
+  <span class="word">ZOHO<span>WEEN</span></span>
+  <a class="btn btn-solid" href="#reservar" style="padding:9px 16px; font-size:13px;">Reservar</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-left">
+    <div class="dots"></div>
+    <span class="tag" style="align-self:flex-start;">Solo el 31 de octubre</span>
+    <h1 class="hero-title comic">ZOHOWEEN<br><span class="red">TOWN</span></h1>
+    <p class="hero-quote">«La noche que Zona 9 no quiere recordar. El anillo se enciende en rojo y la pista no perdona.»</p>
+
+    <form class="rform" id="resForm">
+      <div class="row2">
+        <div class="field">
+          <label for="fNombre">Nombre</label>
+          <input id="fNombre" name="nombre" type="text" placeholder="¿Cómo te llamás?" required>
+        </div>
+        <div class="field">
+          <label for="fTel">WhatsApp</label>
+          <input id="fTel" name="telefono" type="tel" placeholder="5555-5555" required>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="fPersonas">Personas</label>
+          <input id="fPersonas" name="personas" type="number" min="1" value="2" required>
+        </div>
+        <div class="field" style="justify-content:flex-end;">
+          <label class="check"><input type="checkbox" id="fVip" name="vip"> Quiero mesa VIP</label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fDisfraz">Disfraz (opcional)</label>
+        <input id="fDisfraz" name="disfraz" type="text" placeholder="Ej: zombie, bruja, lo que sea">
+      </div>
+      <button type="submit" class="btn btn-solid" style="align-self:flex-start;">¡RESERVAR YA!</button>
+      <small>Al enviar se abre WhatsApp con tu reserva lista para mandar.</small>
+      <div id="waMsg"></div>
+      <button type="button" id="copyBtn" class="btn" style="display:none; align-self:flex-start; font-size:13px; padding:9px 16px;">Copiar mensaje</button>
+    </form>
+  </div>
+
+  <div class="hero-right">
+    <div class="dots"></div>
+    <div class="bubble">Psst. Vos. Si venís disfrazado, entrás primero. <i>(No es broma.)</i></div>
+    <div class="photo-panel">
+      <img src="assets/zoho-floor.png" alt="Pista de Zoho bajo el anillo de luces">
+      <div class="tint"></div>
+      <div class="halftone"></div>
+    </div>
+    <div class="burst burst-corner">
+      <svg viewBox="0 0 100 100"><polygon points="50,2 61,30 90,22 70,45 95,58 65,58 70,90 50,68 30,90 35,58 5,58 30,45 10,22 39,30" fill="var(--ink)"/><polygon points="50,8 60,32 86,25 68,46 90,57 63,57 68,86 50,66 32,86 37,57 10,57 32,46 14,25 40,32" fill="var(--red)" stroke="var(--ink)" stroke-width="2"/></svg>
+      <span>¡31<br>OCT!</span>
+    </div>
+    <span class="fx fx1">¡BOO!</span>
+    <span class="fx fx2">¡AAAH!</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <section id="menu">
+    <span class="section-eyebrow">La barra no cierra</span>
+    <h2 class="section-title comic">Menú</h2>
+    <div class="panel">
+      <div class="menu-grid">
+        <div>
+          <h4>Premium</h4>
+          <ul>
+            <li><span>Botella (Buchanan's, JW Black, Old Parr, Grey Goose, Zacapa, 1800, Jäger)</span><span class="price">Q880</span></li>
+          </ul>
+        </div>
+        <div>
+          <h4>VIP</h4>
+          <ul>
+            <li><span>Moët &amp; Chandon</span><span class="price">Q4,400</span></li>
+            <li><span>Dom Pérignon</span><span class="price">Q4,000</span></li>
+            <li><span>Don Julio 70</span><span class="price">Q1,660</span></li>
+            <li><span>Patrón Añejo</span><span class="price">Q1,200</span></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Barra</h4>
+          <ul>
+            <li><span>Monte Carlo / Corona / Gallo</span><span class="price">Q40</span></li>
+            <li><span>Beerbox (12 cervezas)</span><span class="price">Q440</span></li>
+            <li><span>Red Bull</span><span class="price">Q45</span></li>
+          </ul>
+        </div>
+      </div>
+      <p class="menu-more">Lista completa, Standard / Novedades y promos de disfraz — <a href="https://wa.link/j1p7nb" target="_blank" rel="noopener">pedila por WhatsApp</a>.</p>
+    </div>
+  </section>
+
+  <section id="visualizar">
+    <span class="section-eyebrow">Mirá antes de entrar</span>
+    <h2 class="section-title comic">Visualizar</h2>
+    <div class="zoom-grid">
+      <div class="zoom-tile" data-full="assets/zoho-floor.png">
+        <img src="assets/zoho-floor.png" alt="Pista bajo el anillo de luces rojas">
+        <div class="tint"></div>
+        <span class="cap">el anillo, encendido</span>
+      </div>
+      <div class="zoom-tile" data-full="assets/zoho-poster.png">
+        <img src="assets/zoho-poster.png" alt="Afiche Zohoween Town">
+        <div class="tint"></div>
+        <span class="cap">zohoween town</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto">
+    <span class="section-eyebrow">No te pierdas</span>
+    <h2 class="section-title comic">Contacto</h2>
+    <div class="contact-grid">
+      <div class="panel">
+        <span class="section-eyebrow">WhatsApp</span>
+        <div class="value">wa.link/j1p7nb</div>
+        <a class="btn" href="https://wa.link/j1p7nb" target="_blank" rel="noopener">Escribir</a>
+      </div>
+      <div class="panel">
+        <span class="section-eyebrow">Ubicación</span>
+        <div class="value">Zona 9, Guatemala</div>
+        <a class="btn" href="https://waze.com/ul/h9fxeh1evy" target="_blank" rel="noopener">Waze</a>
+      </div>
+      <div class="panel">
+        <span class="section-eyebrow">Instagram</span>
+        <div class="value">@zoho.guatemalacity</div>
+        <a class="btn" href="https://www.instagram.com/zoho.guatemalacity" target="_blank" rel="noopener">Seguir</a>
+      </div>
+      <div class="panel">
+        <span class="section-eyebrow">TikTok</span>
+        <div class="value">@zoho.guatemalacity</div>
+        <a class="btn" href="https://www.tiktok.com/@zoho.guatemalacity" target="_blank" rel="noopener">Seguir</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <span>Zohoween Town · 31 de octubre</span>
+  <span>Zona 9, Guatemala</span>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+(function(){
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  document.querySelectorAll('.zoom-tile').forEach(function(tile){
+    tile.addEventListener('click', function(){
+      lightboxImg.src = tile.getAttribute('data-full');
+      lightboxImg.alt = tile.querySelector('img').alt;
+      lightbox.classList.add('open');
+    });
+  });
+  lightbox.addEventListener('click', function(){ lightbox.classList.remove('open'); lightboxImg.src=''; });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape'){ lightbox.classList.remove('open'); lightboxImg.src=''; }
+  });
+
+  var batPath = 'M32 10 C28 2,18 0,8 6 C14 8,18 12,20 16 C10 14,2 18,0 24 C10 22,18 24,22 20 C24 24,28 28,32 30 C36 28,40 24,42 20 C46 24,54 22,64 24 C62 18,54 14,44 16 C46 12,50 8,56 6 C46 0,36 2,32 10 Z';
+  var batsContainer = document.getElementById('bats');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var positions = [
+    {side:'left', pct:2, len:70, s:30},
+    {side:'left', pct:8, len:160, s:24},
+    {side:'left', pct:15, len:40, s:20},
+    {side:'right', pct:2, len:110, s:28},
+    {side:'right', pct:8, len:50, s:22},
+    {side:'right', pct:15, len:190, s:26}
+  ];
+  positions.forEach(function(p, i){
+    var hang = document.createElement('div');
+    hang.className = 'hang';
+    hang.style[p.side] = p.pct + '%';
+    hang.style.setProperty('--len', p.len + 'px');
+    hang.style.setProperty('--s', p.s + 'px');
+    hang.style.setProperty('--d', (4 + Math.random()*2.5) + 's');
+    hang.style.setProperty('--delay', (-i * 0.7) + 's');
+    hang.innerHTML =
+      '<div class="thread"></div>' +
+      '<svg class="bat-ic" viewBox="0 0 64 32" fill="#1a0e0d"><path d="'+batPath+'"/></svg>';
+    batsContainer.appendChild(hang);
+  });
+  if (reduced){
+    batsContainer.querySelectorAll('.hang').forEach(function(h, i){
+      h.style.transform = 'rotate(' + (i % 2 === 0 ? -5 : 5) + 'deg)';
+    });
+  }
+
+  var form = document.getElementById('resForm');
+  var waMsg = document.getElementById('waMsg');
+  var copyBtn = document.getElementById('copyBtn');
+  var lastMessage = '';
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var nombre = form.nombre.value.trim();
+    var telefono = form.telefono.value.trim();
+    var personas = form.personas.value;
+    var vip = form.vip.checked;
+    var disfraz = form.disfraz.value.trim();
+
+    var lines = [
+      'Hola, quiero reservar para Zohoween Town (31 de octubre):',
+      'Nombre: ' + nombre,
+      'WhatsApp: ' + telefono,
+      'Personas: ' + personas,
+      'Mesa VIP: ' + (vip ? 'Sí' : 'No')
+    ];
+    if (disfraz) lines.push('Disfraz: ' + disfraz);
+    lastMessage = lines.join('\n');
+
+    waMsg.textContent = lastMessage;
+    waMsg.classList.add('show');
+    copyBtn.style.display = 'inline-flex';
+
+    var url = 'https://wa.link/j1p7nb?text=' + encodeURIComponent(lastMessage);
+    var a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  copyBtn.addEventListener('click', function(){
+    if (!lastMessage) return;
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = lastMessage;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch(err){}
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(lastMessage).catch(fallback);
+    } else {
+      fallback();
+    }
+    copyBtn.textContent = '¡Copiado!';
+    setTimeout(function(){ copyBtn.textContent = 'Copiar mensaje'; }, 1800);
+  });
+})();
+</script>
