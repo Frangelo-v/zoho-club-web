@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0706">
 <title>Zohoween Town</title>
 <style>
 :root{
@@ -178,11 +179,12 @@ html[data-mode="dark"] .btn-solid:hover{box-shadow:6px 6px 0 #000, 0 0 32px rgba
 
 /* ======== TOPBAR ======== */
 .topbar{
-  position:sticky; top:env(safe-area-inset-top,0px); z-index:40;
+  position:sticky; top:0; z-index:40;
   display:flex; align-items:center; justify-content:space-between; gap:12px;
-  padding-block:8px;
-  background:rgba(11,7,6,0.92);
-  backdrop-filter:blur(6px);
+  padding-top:calc(8px + env(safe-area-inset-top,0px));
+  padding-bottom:8px;
+  background:#0b0706;
+  box-shadow:0 6px 18px rgba(0,0,0,0.55);
   border-bottom:3px solid var(--red);
   margin-inline:calc(-1 * max(16px, env(safe-area-inset-left,0px)));
   padding-inline:max(16px, env(safe-area-inset-left,0px));
@@ -431,11 +433,16 @@ footer{
   .row2{grid-template-columns:1fr;}
   .card{flex:0 0 102px;}
   .web{top:52px; width:44vw; height:44vw;}
-  .web{stroke-opacity:0.32;}
+  .web{stroke-opacity:0.2;}
   .spider:nth-of-type(3), .spider:nth-of-type(4), .spider:nth-of-type(6), .spider:nth-of-type(7){display:none;}
   .flybat ~ .flybat ~ .flybat{display:none;}
 }
 @media (max-width:480px){
+  .topbar{padding-bottom:6px; padding-top:calc(6px + env(safe-area-inset-top,0px));}
+  .logo{font-size:23px;}
+  .mode-btn{width:34px; height:34px;}
+  .mode-btn svg{width:18px; height:18px;}
+  .top-actions .btn{padding:7px 12px !important; font-size:13px !important;}
   .countdown{gap:6px;}
   .cd{min-width:0; flex:1 1 0; padding:4px 4px 3px;}
   .cd b{font-size:24px;}
@@ -552,7 +559,7 @@ footer{
   </section>
 
   <section id="visualizar">
-    <span class="eyebrow">Mirá antes de entrar</span>
+    <span class="eyebrow">Mira antes de entrar</span>
     <h2 class="section-title">VISUALIZAR</h2>
     <div class="zoom-grid">
       <div class="zoom-tile" data-full="assets/zoho-stage.png">
