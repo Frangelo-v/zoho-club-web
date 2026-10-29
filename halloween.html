@@ -297,7 +297,8 @@ html[data-mode="light"] .mode-btn .moon{display:none;}
 .fx2{bottom:22px; left:16px; transform:rotate(-8deg);}
 
 /* ======== SECTIONS ======== */
-section{padding-block:70px 20px; position:relative; z-index:2;}
+section{padding-block:36px 16px; position:relative; z-index:2;}
+#menu .section-title{font-size:clamp(32px,5.4vw,52px);}
 .panel{
   position:relative;
   background:var(--panel); color:var(--text);
@@ -307,42 +308,54 @@ section{padding-block:70px 20px; position:relative; z-index:2;}
 }
 
 /* menu */
-.tabs{display:flex; flex-wrap:wrap; gap:10px; margin:26px 0 22px;}
+.tabs{display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 12px;}
 .tab{
-  padding:10px 16px;
-  font-family:'Bangers'; font-size:18px; letter-spacing:0.04em;
+  padding:7px 13px;
+  font-family:'Bangers'; font-size:15px; letter-spacing:0.04em;
   background:var(--panel); color:var(--text);
   border:3px solid var(--line); box-shadow:3px 3px 0 var(--shadow);
   cursor:pointer;
 }
 .tab[aria-pressed="true"]{background:var(--red); color:#fff; transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--shadow);}
-.cat-note{font-family:'Space Mono'; font-size:12px; color:var(--muted); margin:0 0 18px;}
-.cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:22px;}
+.cat-note{font-family:'Space Mono'; font-size:11px; color:var(--muted); margin:0 0 4px;}
+.scroll-hint{font-family:'Space Mono'; font-size:10.5px; color:var(--muted); margin:0 0 10px; letter-spacing:0.06em;}
+.cards{
+  display:flex; gap:14px;
+  overflow-x:auto; overflow-y:hidden;
+  padding:4px 4px 14px;
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
+}
+.cards::-webkit-scrollbar{height:8px;}
+.cards::-webkit-scrollbar-thumb{background:var(--red); border:1px solid var(--line);}
+.cards::-webkit-scrollbar-track{background:var(--field);}
 .card{
   position:relative;
+  flex:0 0 118px;
+  scroll-snap-align:start;
   background:var(--panel); color:var(--text);
   border:3px solid var(--line);
-  box-shadow:5px 5px 0 var(--shadow);
+  box-shadow:4px 4px 0 var(--shadow);
   display:flex; flex-direction:column;
   transition:transform 0.15s ease, box-shadow 0.15s ease;
 }
-.card:hover{transform:translate(-3px,-3px) rotate(-0.6deg); box-shadow:8px 8px 0 var(--shadow), 0 0 30px rgba(226,20,42,0.35);}
-.card .pic{position:relative; aspect-ratio:4/5; overflow:hidden; border-bottom:3px solid var(--line); background:#1d1311;}
+.card:hover{transform:translate(-2px,-2px) rotate(-0.6deg); box-shadow:6px 6px 0 var(--shadow), 0 0 22px rgba(226,20,42,0.35);}
+.card .pic{position:relative; aspect-ratio:1/1; overflow:hidden; border-bottom:3px solid var(--line); background:#1d1311;}
 .card .pic img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
 .card .pic svg{position:absolute; inset:0; width:100%; height:100%;}
-.card .info{padding:12px 12px 14px; display:flex; flex-direction:column; gap:4px; flex:1;}
-.card .name{font-family:'Bangers'; font-size:20px; line-height:1.05; font-weight:400;}
-.card .kind{font-family:'Space Mono'; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted);}
+.card .info{padding:8px 8px 10px; display:flex; flex-direction:column; gap:2px; flex:1;}
+.card .name{font-family:'Bangers'; font-size:15px; line-height:1.08; font-weight:400;}
+.card .kind{font-family:'Space Mono'; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);}
 .price{
-  position:absolute; top:-10px; right:-10px; z-index:2;
+  position:absolute; top:-8px; right:-8px; z-index:2;
   background:var(--yellow); color:var(--ink);
-  border:3px solid var(--ink); box-shadow:3px 3px 0 var(--ink);
-  padding:5px 9px;
-  font-family:'Bangers'; font-size:20px; letter-spacing:0.02em;
+  border:2.5px solid var(--ink); box-shadow:2px 2px 0 var(--ink);
+  padding:3px 7px;
+  font-family:'Bangers'; font-size:14px; letter-spacing:0.02em;
   transform:rotate(6deg);
   font-variant-numeric:tabular-nums;
 }
-.price.unsure::after{content:'*'; color:var(--red); margin-left:2px;}
+.price.unsure::after{content:'*'; color:var(--red); margin-left:1px;}
 .menu-foot{margin-top:26px; font-family:'Space Mono'; font-size:12px; color:#a8968a;}
 .menu-foot b{color:var(--red);}
 
@@ -380,7 +393,7 @@ footer{
   .hero{grid-template-columns:1fr;}
   .hero-left{border-right:0; border-bottom:3px dashed var(--line);}
   .row2{grid-template-columns:1fr;}
-  .cards{grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:18px;}
+  .card{flex:0 0 102px;}
 }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -480,6 +493,7 @@ footer{
     <h2 class="section-title">MENÚ</h2>
     <div class="tabs" id="tabs" role="group" aria-label="Categorías del menú"></div>
     <p class="cat-note" id="catNote"></p>
+    <p class="scroll-hint">← deslizá para ver más →</p>
     <div class="cards" id="cards"></div>
     <p class="menu-foot"><b>*</b> Precio pendiente de confirmar con el local. Precios en quetzales.</p>
   </section>
