@@ -258,8 +258,6 @@ html[data-mode="light"] .mode-btn .moon{display:none;}
 .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
 .row-pd{display:grid; grid-template-columns:96px 1fr; gap:10px;}
 .form-actions{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
-#waMsg{display:none; background:var(--yellow); color:var(--ink); border:2.5px solid var(--line); padding:12px; font-family:'Space Mono'; font-size:12px; line-height:1.5; white-space:pre-wrap;}
-#waMsg.show{display:block;}
 
 .hero-right{
   position:relative; overflow:hidden;
@@ -530,9 +528,7 @@ footer{
           <button type="submit" class="btn btn-solid" style="padding:10px 18px; font-size:16px;">¡RESERVAR YA!</button>
           <label class="check" for="fVip"><input type="checkbox" id="fVip" name="vip"> Quiero mesa VIP</label>
         </div>
-        <small>Al enviar se abre WhatsApp con tu reserva lista para mandar.</small>
-        <div id="waMsg"></div>
-        <button type="button" id="copyBtn" class="btn" style="display:none; align-self:flex-start; font-size:14px; padding:9px 16px;">Copiar mensaje</button>
+        <small id="formNote">Te abre WhatsApp con el mensaje ya escrito, solo le das enviar.</small>
       </form>
     </div>
 
@@ -851,11 +847,10 @@ footer{
   lightbox.addEventListener('click', closeLb);
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeLb(); });
 
-  /* ---------- reservation → WhatsApp ---------- */
+  /* ---------- reservation → WhatsApp (message pre-filled) ---------- */
+  var WA_NUMBER = '50239961104';
   var form = document.getElementById('resForm');
-  var waMsg = document.getElementById('waMsg');
-  var copyBtn = document.getElementById('copyBtn');
-  var lastMessage = '';
+  var formNote = document.getElementById('formNote');
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
@@ -868,35 +863,11 @@ footer{
     ];
     var disfraz = form.disfraz.value.trim();
     if (disfraz) lines.push('Disfraz: ' + disfraz);
-    lastMessage = lines.join('\n');
-    waMsg.textContent = lastMessage;
-    waMsg.classList.add('show');
-    copyBtn.style.display = 'inline-flex';
-    var a = document.createElement('a');
-    a.href = 'https://wa.link/j1p7nb?text=' + encodeURIComponent(lastMessage);
-    a.target = '_blank';
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
-
-  copyBtn.addEventListener('click', function(){
-    if (!lastMessage) return;
-    function fallback(){
-      var ta = document.createElement('textarea');
-      ta.value = lastMessage;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand('copy'); } catch(err) {}
-      document.body.removeChild(ta);
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lastMessage).catch(fallback);
-    else fallback();
-    copyBtn.textContent = '¡Copiado!';
-    setTimeout(function(){ copyBtn.textContent = 'Copiar mensaje'; }, 1800);
+    var url = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(lines.join('\n'));
+    formNote.textContent = 'Abriendo WhatsApp con tu reserva ya escrita… solo dale enviar.';
+    var win = window.open(url, '_blank');
+    if (win) { try { win.opener = null; } catch(err) {} }
+    else window.location.href = url;
   });
 })();
 </script>
