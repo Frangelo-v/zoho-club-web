@@ -179,7 +179,7 @@ html[data-mode="dark"] .btn-solid:hover{box-shadow:6px 6px 0 #000, 0 0 32px rgba
 .topbar{
   position:sticky; top:env(safe-area-inset-top,0px); z-index:40;
   display:flex; align-items:center; justify-content:space-between; gap:12px;
-  padding-block:12px;
+  padding-block:8px;
   background:rgba(11,7,6,0.92);
   backdrop-filter:blur(6px);
   border-bottom:3px solid var(--red);
@@ -190,7 +190,7 @@ html[data-mode="dark"] .btn-solid:hover{box-shadow:6px 6px 0 #000, 0 0 32px rgba
 .logo span{color:var(--red);}
 .top-actions{display:flex; align-items:center; gap:10px;}
 .mode-btn{
-  width:44px; height:44px; padding:0;
+  width:38px; height:38px; padding:0;
   display:inline-flex; align-items:center; justify-content:center;
   background:var(--panel); border:3px solid var(--line); box-shadow:3px 3px 0 var(--shadow);
   cursor:pointer;
@@ -204,32 +204,32 @@ html[data-mode="light"] .mode-btn .moon{display:none;}
 .hero{
   position:relative; z-index:2;
   display:grid; grid-template-columns:1.08fr 1fr;
-  margin-top:28px;
+  margin-top:14px;
   border:3px solid var(--line);
   box-shadow:8px 8px 0 var(--shadow), 0 0 90px rgba(226,20,42,0.25);
 }
 .hero-left{
   position:relative; overflow:hidden;
   background:var(--panel-hero); color:var(--text);
-  padding:40px clamp(20px,4vw,48px);
-  display:flex; flex-direction:column; gap:18px;
+  padding:20px clamp(18px,3vw,36px);
+  display:flex; flex-direction:column; gap:10px;
   border-right:3px dashed var(--line);
 }
-.hero-title{font-size:clamp(52px,8vw,96px); position:relative; color:var(--text);}
+.hero-title{font-size:clamp(38px,5vw,62px); position:relative; color:var(--text);}
 .hero-title .red{color:var(--red); -webkit-text-stroke:1.5px var(--ink); text-shadow:4px 4px 0 var(--ink);}
 .flicker{animation:flicker 6s infinite;}
 @keyframes flicker{0%,18%,22%,62%,64%,100%{opacity:1;} 20%,63%{opacity:0.35;}}
-.hero-quote{font-style:italic; font-weight:500; font-size:15px; color:var(--muted); max-width:42ch; position:relative; margin:0;}
+.hero-quote{font-style:italic; font-weight:500; font-size:13px; color:var(--muted); max-width:46ch; position:relative; margin:0;}
 
-.countdown{display:flex; gap:10px; flex-wrap:wrap; position:relative;}
+.countdown{display:flex; gap:8px; flex-wrap:wrap; position:relative;}
 .cd{
-  min-width:74px; padding:8px 10px 6px;
+  min-width:58px; padding:4px 8px 3px;
   background:var(--ink); color:var(--bone);
   border:3px solid var(--line); box-shadow:4px 4px 0 var(--red);
   text-align:center;
 }
-.cd b{display:block; font-family:'Bangers'; font-size:38px; line-height:1; font-variant-numeric:tabular-nums; color:var(--yellow); font-weight:400;}
-.cd small{font-family:'Space Mono'; font-size:10px; letter-spacing:0.14em; text-transform:uppercase;}
+.cd b{display:block; font-family:'Bangers'; font-size:26px; line-height:1; font-variant-numeric:tabular-nums; color:var(--yellow); font-weight:400;}
+.cd small{font-family:'Space Mono'; font-size:8.5px; letter-spacing:0.14em; text-transform:uppercase;}
 .cd-done{font-family:'Bangers'; font-size:34px; color:var(--red);}
 
 .rform{
@@ -237,22 +237,24 @@ html[data-mode="light"] .mode-btn .moon{display:none;}
   background:var(--panel); color:var(--text);
   border:3px solid var(--line);
   box-shadow:6px 6px 0 var(--shadow);
-  padding:22px;
-  display:flex; flex-direction:column; gap:14px;
+  padding:14px 16px;
+  display:flex; flex-direction:column; gap:9px;
 }
-.rform h3{font-family:'Bangers'; font-size:26px; font-weight:400;}
-.field{display:flex; flex-direction:column; gap:6px;}
+.rform h3{font-family:'Bangers'; font-size:21px; font-weight:400;}
+.field{display:flex; flex-direction:column; gap:4px;}
 .field label{font-family:'Space Mono'; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; display:flex; align-items:center; gap:6px;}
 .field label:not(.check)::before{content:''; width:7px; height:7px; background:var(--red); border-radius:50%;}
 .field input{
   border:2.5px solid var(--line); background:var(--field); color:var(--text);
-  padding:12px; font-family:'Archivo'; font-size:15px; border-radius:0;
+  padding:8px 10px; font-family:'Archivo'; font-size:14px; border-radius:0;
 }
 .field input::placeholder{color:var(--muted);}
 .check{display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600; cursor:pointer;}
 .check input{width:20px; height:20px; accent-color:var(--red);}
 .rform small{font-family:'Space Mono'; font-size:11px; color:var(--muted);}
-.row2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.row-pd{display:grid; grid-template-columns:96px 1fr; gap:10px;}
+.form-actions{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
 #waMsg{display:none; background:var(--yellow); color:var(--ink); border:2.5px solid var(--line); padding:12px; font-family:'Space Mono'; font-size:12px; line-height:1.5; white-space:pre-wrap;}
 #waMsg.show{display:block;}
 
@@ -260,8 +262,8 @@ html[data-mode="light"] .mode-btn .moon{display:none;}
   position:relative; overflow:hidden;
   background:var(--red);
   display:flex; align-items:center; justify-content:center;
-  padding:88px 32px 36px;
-  min-height:340px;
+  padding:76px 28px 28px;
+  min-height:300px;
 }
 .hero-right .dots{--dot:#140b0a; opacity:0.18; background-size:9px 9px;}
 .hero-right::before{
@@ -269,10 +271,10 @@ html[data-mode="light"] .mode-btn .moon{display:none;}
   background:radial-gradient(circle at 50% 60%, transparent 30%, rgba(60,0,6,0.55) 100%);
 }
 .bubble{
-  position:absolute; top:26px; left:26px; right:26px; z-index:3;
+  position:absolute; top:18px; left:20px; right:20px; z-index:3;
   background:var(--bone); color:var(--ink);
   border:3px solid var(--ink); box-shadow:5px 5px 0 var(--ink);
-  padding:14px 16px; font-weight:600; font-size:14px; line-height:1.4;
+  padding:10px 14px; font-weight:600; font-size:13px; line-height:1.35;
 }
 .bubble::after{
   content:''; position:absolute; left:34px; bottom:-15px;
@@ -292,7 +294,7 @@ html[data-mode="light"] .mode-btn .moon{display:none;}
 .photo-panel img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
 .photo-panel .tint{position:absolute; inset:0; background:var(--red); mix-blend-mode:multiply; opacity:0.55;}
 .photo-panel .halftone{position:absolute; inset:0; background-image:radial-gradient(#140b0a 1px, transparent 1.3px); background-size:6px 6px; opacity:0.35; mix-blend-mode:multiply;}
-.hero-right .burst{top:96px; right:14px; z-index:4;}
+.hero-right .burst{top:80px; right:10px; z-index:4; width:92px; height:92px;}
 .fx1{top:46%; right:12px; transform:rotate(10deg);}
 .fx2{bottom:22px; left:16px; transform:rotate(-8deg);}
 
@@ -451,20 +453,20 @@ footer{
             <input id="fTel" name="telefono" type="tel" placeholder="5555-5555" autocomplete="tel" required>
           </div>
         </div>
-        <div class="row2">
+        <div class="row-pd">
           <div class="field">
             <label for="fPersonas">Personas</label>
             <input id="fPersonas" name="personas" type="number" min="1" max="30" value="2" required>
           </div>
-          <div class="field" style="justify-content:flex-end;">
-            <label class="check" for="fVip"><input type="checkbox" id="fVip" name="vip"> Quiero mesa VIP</label>
+          <div class="field">
+            <label for="fDisfraz">Disfraz (opcional)</label>
+            <input id="fDisfraz" name="disfraz" type="text" placeholder="Zombie, bruja, lo que sea">
           </div>
         </div>
-        <div class="field">
-          <label for="fDisfraz">Disfraz (opcional)</label>
-          <input id="fDisfraz" name="disfraz" type="text" placeholder="Zombie, bruja, lo que sea">
+        <div class="form-actions">
+          <button type="submit" class="btn btn-solid" style="padding:10px 18px; font-size:16px;">¡RESERVAR YA!</button>
+          <label class="check" for="fVip"><input type="checkbox" id="fVip" name="vip"> Quiero mesa VIP</label>
         </div>
-        <button type="submit" class="btn btn-solid" style="align-self:flex-start;">¡RESERVAR YA!</button>
         <small>Al enviar se abre WhatsApp con tu reserva lista para mandar.</small>
         <div id="waMsg"></div>
         <button type="button" id="copyBtn" class="btn" style="display:none; align-self:flex-start; font-size:14px; padding:9px 16px;">Copiar mensaje</button>
